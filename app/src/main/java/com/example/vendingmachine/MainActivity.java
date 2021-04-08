@@ -1,7 +1,11 @@
 package com.example.vendingmachine;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 
@@ -17,44 +22,65 @@ import IFabrics.IFabric;
 import IFabrics.borjomyFabric;
 import IFabrics.croissantFabric;
 import IFabrics.laysFabric;
+import product.borjomy;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
 
-    TextView machineName1;
-    TextView machineStatus1;
-    TextView machineStudent1;
-    TextView machineProductList1;
-    TextView machineAmountProduct1;
-
-    TextView machineName2;
-    TextView machineStatus2;
-    TextView machineStudent2;
-    TextView machineProductList2;
-    TextView machineAmountProduct2;
-
-    TextView machineName3;
-    TextView machineStatus3;
-    TextView machineStudent3;
-    TextView machineProductList3;
-    TextView machineAmountProduct3;
-
-    TextView machineName4;
-    TextView machineStatus4;
-    TextView machineStudent4;
-    TextView machineProductList4;
-    TextView machineAmountProduct4;
 
     Spinner chooseProduct;
-    Spinner chooseMachine;
-    EditText AmountProduct;
+    Spinner chooseVendingMachine;
+    EditText AmountOfProducts;
     Button add;
     Button generateStudents;
+
+    machineFragment fragment1 = machineFragment.newInstance();
+    machineFragment fragment2 = machineFragment.newInstance();
+    machineFragment fragment3 = machineFragment.newInstance();
+    machineFragment fragment4 = machineFragment.newInstance();
+
+    Handler handler = new Handler() {   // создание хэндлера
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.getData().getString("name")) {
+                case "1":
+                    fragment1.setMachineNameValue(msg.getData().getString("name"));
+                    fragment1.setMachineStatusValue(msg.getData().getString("status"));
+                    fragment1.setMachineStudentValue(msg.getData().getInt("student"));
+                    fragment1.setMachineAmountOfProductsValue(msg.getData().getInt("productsAmount"));
+                    fragment1.setMachineProductsListValue(msg.getData().getString("productsList"));
+                    break;
+                case "2":
+                    fragment2.setMachineNameValue(msg.getData().getString("name"));
+                    fragment2.setMachineStatusValue(msg.getData().getString("status"));
+                    fragment2.setMachineStudentValue(msg.getData().getInt("student"));
+                    fragment2.setMachineAmountOfProductsValue(msg.getData().getInt("productsAmount"));
+                    fragment2.setMachineProductsListValue(msg.getData().getString("productsList"));
+                    break;
+
+                case "3":
+                    fragment3.setMachineNameValue(msg.getData().getString("name"));
+                    fragment3.setMachineStatusValue(msg.getData().getString("status"));
+                    fragment3.setMachineStudentValue(msg.getData().getInt("student"));
+                    fragment3.setMachineAmountOfProductsValue(msg.getData().getInt("productsAmount"));
+                    fragment3.setMachineProductsListValue(msg.getData().getString("productsList"));
+                    break;
+                case "4":
+                    fragment4.setMachineNameValue(msg.getData().getString("name"));
+                    fragment4.setMachineStatusValue(msg.getData().getString("status"));
+                    fragment4.setMachineStudentValue(msg.getData().getInt("student"));
+                    fragment4.setMachineAmountOfProductsValue(msg.getData().getInt("productsAmount"));
+                    fragment4.setMachineProductsListValue(msg.getData().getString("productsList"));
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //инициализация групп студентов на рандом
         ArrayList<Student> studentGroup1;
         ArrayList<Student> studentGroup2;
         ArrayList<Student> studentGroup3;
@@ -63,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         studentGroup2 = new ArrayList<Student>();
         studentGroup3 = new ArrayList<Student>();
         studentGroup4 = new ArrayList<Student>();
-
         for (int i = 0; i < 20; i++) {
             int randNum = (int) ((Math.random() * 100) % 4);
             switch (randNum) {
@@ -81,11 +106,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+
+        //инициализация автоматов и запись их имен в соответсвующие виджеты текста
         Machine machine1;
         Machine machine2;
         Machine machine3;
         Machine machine4;
-
         machine1 = new Machine("1");
         machine1.setQueue(studentGroup1);
         machine2 = new Machine("2");
@@ -95,55 +121,44 @@ public class MainActivity extends AppCompatActivity {
         machine4 = new Machine("4");
         machine4.setQueue(studentGroup4);
 
+        //инициализация фрагментов
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        machineName1 = findViewById(R.id.machineName1);
-        machineName1.setText(machine1.getName());
-        machineStatus1 = findViewById(R.id.machineStatus1);
-        machineStudent1 = findViewById(R.id.machineStudent1);
-        machineProductList1 = findViewById(R.id.machineProductList1);
-        machineAmountProduct1 =  findViewById(R.id.machineAmountProduct1);
-        machineName2 = findViewById(R.id.machineName2);
+        transaction.add(R.id.fragmentContainer1, fragment1);
+        transaction.add(R.id.fragmentContainer2, fragment2);
+        transaction.add(R.id.fragmentContainer3, fragment3);
+        transaction.add(R.id.fragmentContainer4, fragment4);
+        transaction.commit();
 
-        machineName2 = findViewById(R.id.machineName2);
-        machineName2.setText(machine2.getName());
-        machineStatus2 = findViewById(R.id.machineStatus2);
-        machineStudent2 = findViewById(R.id.machineStudent2);
-        machineProductList2 = findViewById(R.id.machineProductList2);
-        machineAmountProduct2 =  findViewById(R.id.machineAmountProduct2);
 
-        machineName3 = findViewById(R.id.machineName3);
-        machineName3.setText(machine3.getName());
-        machineStatus3 = findViewById(R.id.machineStatus3);
-        machineStudent3 = findViewById(R.id.machineStudent3);
-        machineProductList3 = findViewById(R.id.machineProductList3);
-        machineAmountProduct3 =  findViewById(R.id.machineAmountProduct3);
 
-        machineName4 = findViewById(R.id.machineName4);
-        machineName4.setText(machine4.getName());
-        machineStatus4 = findViewById(R.id.machineStatus4);
-        machineStudent4 = findViewById(R.id.machineStudent4);
-        machineProductList4 = findViewById(R.id.machineProductList4);
-        machineAmountProduct4 =  findViewById(R.id.machineAmountProduct4);
 
+        //создание выпадающего меню с продуктами
         chooseProduct = findViewById(R.id.chooseProduct);
-        String[] products = {"borjomy", "croissant", "lays"};
+        String[] products = {"CocaCola", "Lays", "Snickers", "Twix"};
         ArrayAdapter<String> adapterProducts = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, products);
         adapterProducts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseProduct.setAdapter(adapterProducts);
 
-        chooseMachine = findViewById(R.id.chooseMachine);
+        //создание выпадающего меню с автоматами
+        chooseVendingMachine = findViewById(R.id.chooseVendingMachine);
         String[] machines = {"1", "2", "3", "4"};
         ArrayAdapter<String> adapterMachines = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, machines);
         adapterMachines.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        chooseMachine.setAdapter(adapterMachines);
+        chooseVendingMachine.setAdapter(adapterMachines);
 
-        AmountProduct = findViewById(R.id.AmountProduct);
+        AmountOfProducts = findViewById(R.id.AmountOfProducts);
 
-        add = (Button) findViewById(R.id.addProduct);
+        //создание кнопки добавления продуктов
+        add = (Button) findViewById(R.id.addProducts);
         add.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
+                fragment1.setMachineNameValue("1");
+                fragment2.setMachineNameValue("2");
+                fragment3.setMachineNameValue("3");
+                fragment4.setMachineNameValue("4");
                 IFabric fabric = new borjomyFabric();
                 switch (chooseProduct.getSelectedItem().toString()) {
                     case "borjomy":
@@ -156,124 +171,92 @@ public class MainActivity extends AppCompatActivity {
                         fabric = new laysFabric();
                 }
                 int amount;
-                if (AmountProduct.getText().toString().equals(""))
+                if (AmountOfProducts.getText().toString().equals(""))
                     amount = 1;
                 else
-                    amount = Integer.parseInt(AmountProduct.getText().toString());
-                switch (chooseMachine.getSelectedItem().toString()) {
+                    amount = Integer.parseInt(AmountOfProducts.getText().toString());
+                switch (chooseVendingMachine.getSelectedItem().toString()) {
                     case "1":
                         machine1.addProduct(fabric, amount);
-                        machineAmountProduct1.setText(Integer.toString(machine1.getProduct().size()));
+                        fragment1.setMachineAmountOfProductsValue(machine1.getProduct().size());
                         break;
                     case "2":
                         machine2.addProduct(fabric, amount);
-                        machineAmountProduct2.setText(Integer.toString(machine2.getProduct().size()));
+                        fragment2.setMachineAmountOfProductsValue(machine2.getProduct().size());
                         break;
                     case "3":
                         machine3.addProduct(fabric, amount);
-                        machineAmountProduct3.setText(Integer.toString(machine3.getProduct().size()));
+                        fragment3.setMachineAmountOfProductsValue(machine3.getProduct().size());
                         break;
                     case "4":
                         machine4.addProduct(fabric, amount);
-                        machineAmountProduct4.setText(Integer.toString(machine4.getProduct().size()));
+                        fragment4.setMachineAmountOfProductsValue(machine4.getProduct().size());
                         break;
                 }
-
             }
         });
 
+        //создание кнопки запуска скудентов
         generateStudents = (Button) findViewById(R.id.generateStudents);
         generateStudents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                machineLifeCycle lifeCycle1 = new machineLifeCycle();
-                machineLifeCycle lifeCycle2 = new machineLifeCycle();
-                machineLifeCycle lifeCycle3 = new machineLifeCycle();
-                machineLifeCycle lifeCycle4 = new machineLifeCycle();
-                lifeCycle1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, machine1);
-                lifeCycle2.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, machine2);
-                lifeCycle3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, machine3);
-                lifeCycle4.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, machine4);
+                VendingMachineLifeCycle lifeCycle1 = new VendingMachineLifeCycle(machine1, handler);
+                VendingMachineLifeCycle lifeCycle2 = new VendingMachineLifeCycle(machine2, handler);
+                VendingMachineLifeCycle lifeCycle3 = new VendingMachineLifeCycle(machine3, handler);
+                VendingMachineLifeCycle lifeCycle4 = new VendingMachineLifeCycle(machine4, handler);
+                lifeCycle1.start();
+                lifeCycle2.start();
+                lifeCycle3.start();
+                lifeCycle4.start();
             }
         });
+
     }
 
-    class machineLifeCycle extends AsyncTask<Machine, Machine, Void> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+
+
+    class VendingMachineLifeCycle extends Thread {
+        private Machine machine;
+        private Handler handler;
+
+        public VendingMachineLifeCycle(Machine machine, Handler handler) {
+            this.machine = machine;
+            this.handler = handler;
         }
 
         @Override
-        protected Void doInBackground(Machine... Machine) {
-            for (int i = 0; i < Machine[0].getQueue().size(); i++) {
-                Machine[0].startToWork(Machine[0].getQueue().get(i));
-                publishProgress(Machine[0]);
-                Machine[0].workingWithAClient();
-                publishProgress(Machine[0]);
-                Machine[0].paying();
-                publishProgress(Machine[0]);
-                Machine[0].delivering();
-                publishProgress(Machine[0]);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Machine... Machine) {
-            if (Machine[0].getName().equals("1")) {
-                machineStatus1.setText(Machine[0].getStatus().toString());
-                machineStudent1.setText(Integer.toString(Machine[0].getClientNumber()));
-                String wantToBuy = "";
-                if (Machine[0].getChoose() != null && Machine[0].getStatus() == com.example.vendingmachine.Status.ISPAYING)
-                    for (int i = 0; i < Machine[0].getChoose().length; i++) {
-                        wantToBuy += Machine[0].getProduct().get(Machine[0].getChoose()[i]).getName() + " ";
-                    }
-                machineProductList1.setText(wantToBuy);
-                machineAmountProduct1.setText(Integer.toString(Machine[0].getProduct().size()));
-            }
-
-            if (Machine[0].getName().equals("2")) {
-                machineStatus2.setText(Machine[0].getStatus().toString());
-                machineStudent2.setText(Integer.toString(Machine[0].getClientNumber()));
-                String wantToBuy = "";
-                if (Machine[0].getChoose() != null && Machine[0].getStatus() == com.example.vendingmachine.Status.ISPAYING)
-                    for (int i = 0; i < Machine[0].getChoose().length; i++) {
-                        wantToBuy += Machine[0].getProduct().get(Machine[0].getChoose()[i]).getName() + " ";
-                    }
-                machineProductList2.setText(wantToBuy);
-                machineAmountProduct2.setText(Integer.toString(Machine[0].getProduct().size()));
-            }
-
-            if (Machine[0].getName().equals("3")) {
-                machineStatus3.setText(Machine[0].getStatus().toString());
-                machineStudent3.setText(Integer.toString(Machine[0].getClientNumber()));
-                String wantToBuy = "";
-                if (Machine[0].getChoose() != null && Machine[0].getStatus() == com.example.vendingmachine.Status.ISPAYING)
-                    for (int i = 0; i < Machine[0].getChoose().length; i++) {
-                        wantToBuy += Machine[0].getProduct().get(Machine[0].getChoose()[i]).getName() + " ";
-                    }
-                machineProductList3.setText(wantToBuy);
-                machineAmountProduct3.setText(Integer.toString(Machine[0].getProduct().size()));
-            }
-
-            if (Machine[0].getName().equals("4")) {
-                machineStatus4.setText(Machine[0].getStatus().toString());
-                machineStudent4.setText(Integer.toString(Machine[0].getClientNumber()));
-                String wantToBuy = "";
-                if (Machine[0].getChoose() != null && Machine[0].getStatus() == com.example.vendingmachine.Status.ISPAYING)
-                    for (int i = 0; i < Machine[0].getChoose().length; i++) {
-                        wantToBuy += Machine[0].getProduct().get(Machine[0].getChoose()[i]).getName() + " ";
-                    }
-                machineProductList4.setText(wantToBuy);
-                machineAmountProduct4.setText(Integer.toString(Machine[0].getProduct().size()));
+        public void run() {
+            for (int i = 0; i < machine.getQueue().size(); i++) {
+                machine.startToWork(machine.getQueue().get(i));
+                publishProgress(machine);
+                machine.workingWithAClient();
+                publishProgress(machine);
+                machine.paying();
+                publishProgress(machine);
+                machine.delivering();
+                publishProgress(machine);
             }
         }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
+
+        protected void publishProgress(Machine machine) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("name", machine.getName());
+            bundle.putSerializable("status", machine.getStatus().toString());
+            bundle.putSerializable("student", machine.getClientNumber());
+            String wantToBuy = "";
+            if (machine.getChoose() != null && machine.getStatus() == com.example.vendingmachine.Status.ISPAYING)
+                for (int i = 0; i < machine.getChoose().length; i++) {
+                    wantToBuy += machine.getProduct().get(machine.getChoose()[i]).getName() + " ";
+                }
+            bundle.putSerializable("productsList", wantToBuy);
+            bundle.putSerializable("productsAmount", machine.getProduct().size());
+            Message msg = new Message();
+            msg.setData(bundle);
+            handler.sendMessage(msg);
         }
+
     }
 }
