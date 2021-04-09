@@ -7,10 +7,10 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:background="@color/cardview_dark_background"
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#7366bd"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
 
@@ -60,7 +60,7 @@
                 android:id="@+id/generateStudents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Generate Students" />
+                android:text="start work" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,12 +93,6 @@
                     android:layout_weight="1"
                     android:text="add" />
             </LinearLayout>
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 

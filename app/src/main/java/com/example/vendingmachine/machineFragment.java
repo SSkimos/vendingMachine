@@ -38,7 +38,7 @@ public class machineFragment extends
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_machine, container, false);
         ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.height = 120;
+        params.height = 140;
         view.setLayoutParams(params);
         machineName = view.findViewById(R.id.machineName);
         machineStatus = view.findViewById(R.id.machineStatus);
@@ -49,11 +49,11 @@ public class machineFragment extends
             @Override
             public void onClick(View view) {
                 ViewGroup.LayoutParams params = view.getLayoutParams();
-                if (params.height == 120) {
-                    params.height = 700;
+                if (params.height == 140) {
+                    params.height = 800;
                 }
                 else {
-                    params.height = 120;
+                    params.height = 140;
                 }
                 view.setLayoutParams(params);
             }

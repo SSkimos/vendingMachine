@@ -136,7 +136,7 @@ public class MainActivity extends FragmentActivity {
 
         //создание выпадающего меню с продуктами
         chooseProduct = findViewById(R.id.chooseProduct);
-        String[] products = {"CocaCola", "Lays", "Snickers", "Twix"};
+        String[] products = {"borjomy", "croissant", "lays"};
         ArrayAdapter<String> adapterProducts = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, products);
         adapterProducts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseProduct.setAdapter(adapterProducts);
